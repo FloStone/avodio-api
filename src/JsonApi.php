@@ -30,6 +30,14 @@ class JsonApi extends AvodioApi
     }
 
     /**
+     * @param int $page
+     */
+    public function setPage(int $page)
+    {
+        $this->params['page'] = $page;
+    }
+
+    /**
      * @return array
      */
     public function getParameters(): array

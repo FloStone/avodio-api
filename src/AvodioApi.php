@@ -58,6 +58,7 @@ abstract class AvodioApi
     {
         $url = $this->buildUrl();
         $client = new Client();
+
         $params = array_merge($this->getAuthParameters(), $this->getParameters());
 
         return $client->request("GET", $url, [
@@ -81,14 +82,7 @@ abstract class AvodioApi
      */
     protected function buildUrl()
     {
-        $url = sprintf("%s%s", self::URL, $this->url);
-
-        $authparams = [
-            self::APP_CLIENT => $this->client,
-            self::APP_SECRET => $this->secret
-        ];
-
-        return $url;
+        return sprintf("%s%s", self::URL, $this->url);
     }
 
     /**
