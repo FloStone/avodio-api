@@ -2,6 +2,10 @@
 
 namespace FloStone\Avodio\Api;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
+
 abstract class AvodioApi
 {
     const URL = "http://avodio/api/";
@@ -46,11 +50,35 @@ abstract class AvodioApi
             $this->url .= "/$id";
     }
 
+    /**
+     * @return ResponseInterface
+     * @throws GuzzleException
+     */
     public function get()
     {
         $url = $this->buildUrl();
+        $client = new Client();
+        $params = array_merge($this->getAuthParameters(), $this->getParameters());
+
+        return $client->request("GET", $url, [
+            "query" => $params
+        ]);
     }
 
+    /**
+     * @return array
+     */
+    protected function getAuthParameters()
+    {
+        return [
+            self::APP_CLIENT => $this->client,
+            self::APP_SECRET => $this->secret
+        ];
+    }
+
+    /**
+     * @return string
+     */
     protected function buildUrl()
     {
         $url = sprintf("%s%s", self::URL, $this->url);
@@ -60,8 +88,11 @@ abstract class AvodioApi
             self::APP_SECRET => $this->secret
         ];
 
-        $url = sprintf("$url?%s", http_build_query($authparams));
-
         return $url;
     }
+
+    /**
+     * @return array
+     */
+    abstract public function getParameters(): array;
 }

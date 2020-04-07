@@ -1,5 +1,6 @@
 {
     "name": "flostone/avodio-api",
+    "version": "1.0.0",
     "description": "Avodio API helper",
     "license": "proprietary",
     "authors": [
