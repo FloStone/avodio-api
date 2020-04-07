@@ -7,5 +7,12 @@
             "email": "mail@flostone.com"
         }
     ],
-    "require": {}
+    "require": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "FloStone\\Avodio\\Api\\": "src/"
+        }
+    }
 }
