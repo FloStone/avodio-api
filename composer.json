@@ -1,0 +1,11 @@
+{
+    "name": "flostone/avodio-api",
+    "description": "Avodio API helper",
+    "authors": [
+        {
+            "name": "Flo Stone",
+            "email": "mail@flostone.com"
+        }
+    ],
+    "require": {}
+}
