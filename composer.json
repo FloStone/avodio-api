@@ -1,6 +1,7 @@
 {
     "name": "flostone/avodio-api",
     "description": "Avodio API helper",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Flo Stone",
