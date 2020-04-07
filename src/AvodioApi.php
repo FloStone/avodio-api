@@ -2,6 +2,8 @@
 
 namespace FloStone\Avodio\Api;
 
+use GuzzleHttp\Client;
+
 abstract class AvodioApi
 {
     const URL = "http://avodio/api/";
@@ -49,19 +51,18 @@ abstract class AvodioApi
     public function get()
     {
         $url = $this->buildUrl();
+        $client = new Client();
+        $response = $client->request("GET", $url, [
+            'query' => [
+                self::APP_CLIENT => $this->client,
+                self::APP_SECRET => $this->secret
+            ]
+        ]);
+        dd($response);
     }
 
     protected function buildUrl()
     {
-        $url = sprintf("%s%s", self::URL, $this->url);
-
-        $authparams = [
-            self::APP_CLIENT => $this->client,
-            self::APP_SECRET => $this->secret
-        ];
-
-        $url = sprintf("$url?%s", http_build_query($authparams));
-
-        return $url;
+        return sprintf("%s%s", self::URL, $this->url);
     }
 }
