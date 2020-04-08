@@ -2,27 +2,28 @@
 
 namespace FloStone\Avodio\Api;
 
+use FloStone\Avodio\Api\Exception\AvodioApiAuthException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class AvodioApi
 {
-    const URL = "http://avodio/api/";
+    const URL = "https://www.avodio.de/api/";
     const APP_CLIENT = "app_client";
     const APP_SECRET = "app_secret";
 
     /**
      * App Client ID
-     * @var string $client
+     * @var string|null $client
      */
-    protected $client;
+    protected $client = null;
 
     /**
      * App Secret ID
-     * @var string $secret
+     * @var string|null $secret
      */
-    protected $secret;
+    protected $secret = null;
 
     /**
      * API Url
@@ -59,11 +60,25 @@ abstract class AvodioApi
         $url = $this->buildUrl();
         $client = new Client();
 
-        $params = array_merge($this->getAuthParameters(), $this->getParameters());
+        $params = $this->getAllParams();
 
         return $client->request("GET", $url, [
             "query" => $params
         ]);
+    }
+
+    protected function getFullUrl()
+    {
+        return sprintf("%s?%s", $this->buildUrl(), http_build_query($this->getAllParams()));
+    }
+
+    /**
+     * @return array
+     * @throws AvodioApiAuthException
+     */
+    protected function getAllParams()
+    {
+        return array_merge($this->getAuthParameters(), $this->getParameters());
     }
 
     /**
@@ -71,6 +86,12 @@ abstract class AvodioApi
      */
     protected function getAuthParameters()
     {
+        if (is_null($this->client))
+            throw new AvodioApiAuthException("App Client ID not set!");
+
+        if (is_null($this->secret))
+            throw new AvodioApiAuthException("App Secret ID not set!");
+
         return [
             self::APP_CLIENT => $this->client,
             self::APP_SECRET => $this->secret

@@ -2,7 +2,9 @@
 
 namespace FloStone\Avodio\Api;
 
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use FloStone\Avodio\Api\Response\JsonApiResponse;
 
 class JsonApi extends AvodioApi
 {
@@ -17,7 +19,14 @@ class JsonApi extends AvodioApi
      */
     public function get()
     {
-        return new JsonApiResponse(parent::get());
+        try
+        {
+            return new JsonApiResponse(parent::get(), $this->getFullUrl());
+        }
+        catch( ClientException $e)
+        {
+            return new JsonApiResponse($e->getResponse(), $this->getFullUrl());
+        }
     }
 
     /**
